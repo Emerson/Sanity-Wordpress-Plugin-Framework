@@ -34,8 +34,20 @@ class ExamplePlugin extends SanityPluginFramework {
 	function __construct() {
       parent::__construct();
   }
+
+	/*
+	*		Run during the activation of the plugin
+	*/
+	function activate() {
+		
+	}
 	
+	/*
+	*		Run during the initialization of Wordpress
+	*/
+	function initialize() {
 	
+	}
 	
 }
 
