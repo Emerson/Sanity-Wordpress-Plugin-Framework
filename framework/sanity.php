@@ -14,8 +14,9 @@ class SanityPluginFramework {
     var $plugin_js = array();
     
 		// Paths
-    var $css_path = '';
-    var $js_path = '';
+		var $css_path = '';
+		var $js_path = '';
+		var $plugin_dir = '';
 
 		// AJAX actions
 		var $ajax_actions = array(
@@ -29,6 +30,7 @@ class SanityPluginFramework {
         $this->wpdb = $wpdb;
         $this->css_path = WP_PLUGIN_URL.'/'.$this->plugin_dir.'/css/';
         $this->js_path = WP_PLUGIN_URL.'/'.$this->plugin_dir.'/js/';
+				$this->plugin_dir = basename(dirname(dirname(__FILE__)));
 				add_action('wp_loaded', array(&$this, 'create_nonce'));
         if(!empty($this->admin_css) || !empty($this->admin_js) ) {
             add_action('admin_enqueue_scripts', array(&$this, 'load_admin_scripts'));

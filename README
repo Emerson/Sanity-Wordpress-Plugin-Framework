@@ -10,7 +10,7 @@ The Sanity Framework was created for developers, not people who just install plu
 
 The Benefits
 ============
-* A tempting system that helps to separate your logic from your views.
+* A template system that helps to separate your logic from your views.
 * An easy way to include JS and CSS within the admin or front-end of your plugin.
 * AJAX in the admin made simple, with nonce integration out of the box.
 * An object oriented approach to plugin development which makes modifications easy.

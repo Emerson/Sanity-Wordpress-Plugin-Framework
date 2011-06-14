@@ -24,7 +24,6 @@ class ExamplePlugin extends SanityPluginFramework {
 	/*
 	*		Some required plugin information
 	*/
-	var $plugin_dir = 'example-plugin';
 	var $version = '1.0';
 	
 	
