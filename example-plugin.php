@@ -26,13 +26,12 @@ class ExamplePlugin extends SanityPluginFramework {
 	*	Some required plugin information
 	*/
 	var $version = '1.0';
-	var $admin_js = array('hello');
 	
 	/*
 	*		Required __construct() function that initalizes the Sanity Framework
 	*/
 	function __construct() {
-      parent::__construct();
+      parent::__construct(__FILE__);
   }
 
 	/*

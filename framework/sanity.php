@@ -24,14 +24,13 @@ class SanityPluginFramework {
         'plugin' => array()
     );
     
-    function __construct() {
+    function __construct($here = __FILE__) {
         global $wpdb;
-        $this->plugin_dir = basename(dirname(dirname(__FILE__)));
+        $this->plugin_dir = basename(dirname(dirname($here)));
         $this->add_ajax_actions();
         $this->wpdb = $wpdb;
         $this->css_path = WP_PLUGIN_URL.'/'.$this->plugin_dir.'/css/';
         $this->js_path = WP_PLUGIN_URL.'/'.$this->plugin_dir.'/js/';
-        $this->plugin_dir = basename(dirname(dirname(__FILE__)));
         add_action('wp_loaded', array(&$this, 'create_nonce'));
         if(!empty($this->admin_css) || !empty($this->admin_js) ) {
             add_action('admin_enqueue_scripts', array(&$this, 'load_admin_scripts'));
@@ -113,7 +112,7 @@ class SanityPluginFramework {
 		*
 		*/
     function render($view) {
-        $template_path = dirname(dirname(__FILE__)).'/views/'.$view.'.php';
+        $template_path = $this->plugin_dir.'/views/'.$view.'.php';
         ob_start();
         include($template_path);
         $output = ob_get_clean();
