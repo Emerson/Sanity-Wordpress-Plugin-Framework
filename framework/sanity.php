@@ -17,6 +17,7 @@ class SanityPluginFramework {
     var $css_path = 'css';
     var $js_path = 'js';
     var $plugin_dir = '';
+    var $plugin_dir_name = '';
 
     // AJAX actions
     var $ajax_actions = array(
@@ -29,8 +30,9 @@ class SanityPluginFramework {
         $this->add_ajax_actions();
         $this->wpdb = $wpdb;
         $this->plugin_dir = WP_PLUGIN_DIR.'/'.basename(dirname($here));
-        $this->css_path = WP_PLUGIN_URL.'/'.$this->plugin_dir.'/css/';
-        $this->js_path = WP_PLUGIN_URL.'/'.$this->plugin_dir.'/js/';
+        $this->plugin_dir_name = basename(dirname($here));
+        $this->css_path = WP_PLUGIN_URL.'/'.$this->plugin_dir_name.'/css/';
+        $this->js_path = WP_PLUGIN_URL.'/'.$this->plugin_dir_name.'/js/';
         add_action('wp_loaded', array(&$this, 'create_nonce'));
         if(!empty($this->admin_css) || !empty($this->admin_js) ) {
             add_action('admin_enqueue_scripts', array(&$this, 'load_admin_scripts'));
