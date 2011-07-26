@@ -1,37 +1,38 @@
 <?php
 class SanityPluginFramework {
     
-		// Container variables
+    // Container variables
     var $view = '';
     var $data = array();
     var $wpdb;
-		var $nonce;
-
+    var $nonce;
+    
     // Assets to load
     var $admin_css = array();
     var $admin_js = array();
     var $plugin_css = array();
     var $plugin_js = array();
     
-		// Paths
-		var $css_path = '';
-		var $js_path = '';
-		var $plugin_dir = '';
+    // Paths
+    var $css_path = 'css';
+    var $js_path = 'js';
+    var $plugin_dir = '';
 
-		// AJAX actions
-		var $ajax_actions = array(
-			'admin' => array(),
-			'plugin' => array()
-		);
+    // AJAX actions
+    var $ajax_actions = array(
+        'admin' => array(),
+        'plugin' => array()
+    );
     
     function __construct() {
         global $wpdb;
-				$this->add_ajax_actions();
+        $this->plugin_dir = basename(dirname(dirname(__FILE__)));
+        $this->add_ajax_actions();
         $this->wpdb = $wpdb;
         $this->css_path = WP_PLUGIN_URL.'/'.$this->plugin_dir.'/css/';
         $this->js_path = WP_PLUGIN_URL.'/'.$this->plugin_dir.'/js/';
-				$this->plugin_dir = basename(dirname(dirname(__FILE__)));
-				add_action('wp_loaded', array(&$this, 'create_nonce'));
+        $this->plugin_dir = basename(dirname(dirname(__FILE__)));
+        add_action('wp_loaded', array(&$this, 'create_nonce'));
         if(!empty($this->admin_css) || !empty($this->admin_js) ) {
             add_action('admin_enqueue_scripts', array(&$this, 'load_admin_scripts'));
         }

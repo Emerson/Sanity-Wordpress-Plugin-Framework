@@ -11,7 +11,8 @@ Author URI: http://www.your-github-account.com/
 
 // Derive the current path and load up Sanity
 $plugin_path = dirname(__FILE__).'/';
-require($plugin_path.'framework/sanity.php');
+if(class_exists('SanityPluginFramework') != true)
+    require_once($plugin_path.'framework/sanity.php');
 
 
 /*
@@ -22,10 +23,10 @@ require($plugin_path.'framework/sanity.php');
 class ExamplePlugin extends SanityPluginFramework {
 	
 	/*
-	*		Some required plugin information
+	*	Some required plugin information
 	*/
 	var $version = '1.0';
-	
+	var $admin_js = array('hello');
 	
 	/*
 	*		Required __construct() function that initalizes the Sanity Framework

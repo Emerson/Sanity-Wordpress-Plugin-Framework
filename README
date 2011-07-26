@@ -33,5 +33,18 @@ Whenever possible, we should separate PHP from HTML. Within Wordpress, you'll se
 		<h2>The Separation of Logic and Views</h2>
 		<p><?php echo $this->data['message'];?></p>
 		
-		
-		
+
+Admin Javascript
+================
+Sometimes you might like to include some handy javascript or stylesheet files within the admin area of your wordpress installation. Well, Sanity makes this task quite easy! Just populate our $admin_js and $admin_css class variables with an array of scripts you would like to include.
+
+        class YourPlugin extends SanityPluginFramework {
+            
+            // Loads /plugin/js/example.js
+            $admin_js = array('example');
+            
+            // Loads /plugin/css/example.css
+            $admin_css = array('example');
+        
+        }
+        
