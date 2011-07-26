@@ -26,9 +26,9 @@ class SanityPluginFramework {
     
     function __construct($here = __FILE__) {
         global $wpdb;
-        $this->plugin_dir = basename(dirname(dirname($here)));
         $this->add_ajax_actions();
         $this->wpdb = $wpdb;
+        $this->plugin_dir = WP_PLUGIN_DIR.'/'.basename(dirname($here));
         $this->css_path = WP_PLUGIN_URL.'/'.$this->plugin_dir.'/css/';
         $this->js_path = WP_PLUGIN_URL.'/'.$this->plugin_dir.'/js/';
         add_action('wp_loaded', array(&$this, 'create_nonce'));
