@@ -47,4 +47,27 @@ Sometimes you might like to include some handy javascript or stylesheet files wi
             var $admin_css = array('example');
         
         }
-        
+
+
+Admin AJAX
+==========
+Adding ajax actions within the admin is easy. Within your plugin class you just follow this pattern:
+
+    class YourPlugin extends SanityPluginFramework {
+
+
+        // Registers our ajax action
+        var $ajax_actions = array('admin' => array('my_ajax_action'));
+
+
+        // Handles the actual ajax request and response.
+        // All Wordpress admin ajax requests are sent through http://your-site.com/wp-admin/admin-ajax.php, which
+        // is available as a global javascript variable sensibly named 'ajaxurl'
+        function my_ajax_action() {
+            $result['message'] = 'Your stuff has been saved';
+            update_option('my_plugin_option', $_POST['field_1']);
+            echo json_encode($result);
+            exit();
+        }
+
+    }
