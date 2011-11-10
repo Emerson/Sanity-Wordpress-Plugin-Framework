@@ -41,10 +41,10 @@ Sometimes you might like to include some handy javascript or stylesheet files wi
         class YourPlugin extends SanityPluginFramework {
             
             // Loads /plugin/js/example.js
-            $admin_js = array('example');
+            var $admin_js = array('example');
             
             // Loads /plugin/css/example.css
-            $admin_css = array('example');
+            var $admin_css = array('example');
         
         }
         
