@@ -1,18 +1,18 @@
 <?php
 class SanityPluginFramework {
-    
+
     // Container variables
     var $view = '';
     var $data = array();
     var $wpdb;
     var $nonce;
-    
+
     // Assets to load
     var $admin_css = array();
     var $admin_js = array();
     var $plugin_css = array();
     var $plugin_js = array();
-    
+
     // Paths
     var $css_path = 'css';
     var $js_path = 'js';
