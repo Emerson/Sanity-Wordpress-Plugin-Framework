@@ -44,11 +44,11 @@ class SanityPluginFramework {
         }
     }
     
-		/*
-		*		load_admin_scripts()
-		*		=====================
-		*		Loads admin-facing CSS and JS.
-		*/
+	/*
+	*		load_admin_scripts()
+	*		=====================
+	*		Loads admin-facing CSS and JS.
+	*/
     function load_admin_scripts() {
         foreach($this->admin_css as $css) {
             wp_enqueue_style($css, $this->css_path.$css.'.css');
@@ -58,63 +58,63 @@ class SanityPluginFramework {
         }
     }
 
-		/*
-		*		load_plugin_scripts()
-		*		=====================
-		*		Loads front-facing CSS and JS.
-		*/
-		function load_plugin_scripts() {
-			foreach($this->plugin_css as $css) {
-          wp_enqueue_style($css, $this->css_path.$css.'.css');
-      }
-      foreach($this->plugin_js as $js) {
-          wp_enqueue_script($js, $this->js_path.$js.'.js');
-      }
-		}
+	/*
+	*		load_plugin_scripts()
+	*		=====================
+	*		Loads front-facing CSS and JS.
+	*/
+	function load_plugin_scripts() {
+	    foreach($this->plugin_css as $css) {
+            wp_enqueue_style($css, $this->css_path.$css.'.css');
+        }
+        foreach($this->plugin_js as $js) {
+            wp_enqueue_script($js, $this->js_path.$js.'.js');
+        }
+	}
 
-		/*
-		*		create_nonce()
-		*		==============
-		*		A security feature that Sanity presumes you should use. Please
-		*		refer to: http://codex.wordpress.org/WordPress_Nonces
-		*/
-		function create_nonce() {
-			$this->nonce = wp_create_nonce('sanity-nonce');
-		}
-		
-		/*
-		*		add_ajax_actions()
-		*		==================
-		*		Loops through $this->ajax_actions['admin'] and $this->ajax_actions['plugin'] and
-		*		registers ajax actions. This makes the actions available in the client plugin.
-		*/
-		function add_ajax_actions() {
-			if(!empty($this->ajax_actions['admin'])) {
-				foreach($this->ajax_actions['admin'] as $action) {
-					add_action("wp_ajax_$action", array(&$this, $action));
-				}
+	/*
+	*		create_nonce()
+	*		==============
+	*		A security feature that Sanity presumes you should use. Please
+	*		refer to: http://codex.wordpress.org/WordPress_Nonces
+	*/
+	function create_nonce() {
+		$this->nonce = wp_create_nonce('sanity-nonce');
+	}
+
+	/*
+	*		add_ajax_actions()
+	*		==================
+	*		Loops through $this->ajax_actions['admin'] and $this->ajax_actions['plugin'] and
+	*		registers ajax actions. This makes the actions available in the client plugin.
+	*/
+	function add_ajax_actions() {
+		if(!empty($this->ajax_actions['admin'])) {
+			foreach($this->ajax_actions['admin'] as $action) {
+				add_action("wp_ajax_$action", array(&$this, $action));
 			}
-			if(!empty($this->ajax_actions['plugin'])) {
-				foreach($this->ajax_actions['plugin'] as $action) {
-					add_action("wp_ajax_nopriv_$action", array(&$this, $action));
-				}
-			}				
 		}
-    
-		/*
-		*		render($view)
-		*		=============
-		*		Loads a view from within the /plugin/views folder. Keep in mind
-		*		that any data you need should be passed through the $this->data array.
-		*		A few examples:
-		*
-		*			Load /Plugin/views/example.php
-		*			$this->render('example');
-		*
-		*			Load /Plugin/views/subfolder/example.php
-		*			$this->render('subfolder/example);
-		*
-		*/
+		if(!empty($this->ajax_actions['plugin'])) {
+			foreach($this->ajax_actions['plugin'] as $action) {
+				add_action("wp_ajax_nopriv_$action", array(&$this, $action));
+			}
+		}				
+	}
+
+	/*
+	*		render($view)
+	*		=============
+	*		Loads a view from within the /plugin/views folder. Keep in mind
+	*		that any data you need should be passed through the $this->data array.
+	*		A few examples:
+	*
+	*			Load /Plugin/views/example.php
+	*			$this->render('example');
+	*
+	*			Load /Plugin/views/subfolder/example.php
+	*			$this->render('subfolder/example);
+	*
+	*/
     function render($view) {
         $template_path = $this->plugin_dir.'/views/'.$view.'.php';
         ob_start();
