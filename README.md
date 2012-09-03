@@ -130,12 +130,14 @@ Sanity takes away much of the pain associated with saving simple custom fields. 
 
     // Within your class...
     // (the use of underscores is important within WordPress)
+
     var $custom_fields = array('_color', '_year', '_etc');
 
     // With your $custom_fields defined, you now need to render a view within your admin.
     // Sanity takes care of populating the $this->data array with your custom_field info.
     // Please note that it's important to have the Sanity Nonce field appear once within
     // your edit screen, otherwise it will not save your custom fields.
+    
     <input type="text" name="_red" value="<?php $this->data['_red']?>" />
     <?php sanity_nonce(); // outputs a hidden nonce field ?>
 
