@@ -71,3 +71,72 @@ Adding ajax actions within the admin is easy. Within your plugin class you just 
         }
 
     }
+
+Custom Post Types
+=================
+Adding a custom post types is easy, but relies more on WordPress than Sanity. You should start by adding an action to the 'init' phase of your plugin, and then use the standard WordPress post type syntax to set everything up:
+
+
+    // Within your class...
+
+    function __construct() {
+        parent::__construct(__FILE__);
+        add_action('init', array($this, 'add_post_type'));
+    }
+
+    function add_post_type() {
+        // Labels
+        $labels = array(
+            'name'          => __('Sliders'),
+            'singular_name' => __('Slider'),
+            'add_new'       => __('Add New'),
+            'all_items'     => __('All Sliders'),
+            'add_new_item'  => __('Add New Slider'),
+            'edit_item'     => __('Edit Slider'),
+            'new_item'      => __('New Slider'),
+            'view_item'     => __('View Slider'),
+            'search_items'  => __('Search Sliders'),
+            'not_found'     => __('No Sliders Found')
+        );
+        // Settings
+        $settings = array(
+            'labels'               => $labels,
+            'public'               => false,
+            'publicly_queryable'   => false,
+            'show_ui'              => true,
+            'register_meta_box_cb' => array($this, 'add_meta_boxes'),
+            'menu_icon'            => get_stylesheet_directory_uri().'/assets/images/admin/sliders.png',
+            'show_in_menu'         => true, 
+            'query_var'            => true,
+            'rewrite'              => array('slug' => 'sliders', 'with_front' => false),
+            'capability_type'      => 'post',
+            'has_archive'          => false, 
+            'hierarchical'         => false,
+            'menu_position'        => 2,
+            'supports'             => array('thumbnail')
+        ); 
+        // Register the actual type
+        register_post_type('slider', $settings);
+    }
+
+    funciton add_meta_boxes() {
+        // Your metabox code here...
+    }
+
+
+Custom Fields
+=============
+Sanity takes away much of the pain associated with saving simple custom fields. To get started, all you need to do is declare the custom fields you want to save.
+
+    // Within your class...
+    // (the use of underscores is important within WordPress)
+    var $custom_fields = array('_color', '_year', '_etc');
+
+    // With your $custom_fields defined, you now need to render a view within your admin.
+    // Sanity takes care of populating the $this->data array with your custom_field info.
+    // Please note that it's important to have the Sanity Nonce field appear once within
+    // your edit screen, otherwise it will not save your custom fields.
+    <input type="text" name="_red" value="<?php $this->data['_red']?>" />
+    <?php sanity_nonce(); // outputs a hidden nonce field ?>
+
+Thats it! Sanity will automatically (and securly) save the data on submit.
