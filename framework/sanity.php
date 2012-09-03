@@ -19,6 +19,9 @@ class SanityPluginFramework {
     var $plugin_dir = '';
     var $plugin_dir_name = '';
 
+    // Used to define custom fields
+    var $custom_fields = array();
+
     // AJAX actions
     var $ajax_actions = array(
         'admin' => array(),
@@ -42,6 +45,10 @@ class SanityPluginFramework {
         if(!empty($this->plugin_css) || !empty($this->plugin_js) ) {
             // TODO: enqueue plugin scripts
         }
+        add_action('adminmenu', array($this, 'load_custom_fields'));
+        if(!empty($this->custom_fields)) {
+            add_action('save_post', array($this, 'save_custom_fields'));
+        }
     }
     
     /*
@@ -59,9 +66,9 @@ class SanityPluginFramework {
     }
 
     /*
-    *       load_plugin_scripts()
-    *       =====================
-    *       Loads front-facing CSS and JS.
+    *   load_plugin_scripts()
+    *   =====================
+    *   Loads front-facing CSS and JS.
     */
     function load_plugin_scripts() {
         foreach($this->plugin_css as $css) {
@@ -73,20 +80,20 @@ class SanityPluginFramework {
     }
 
     /*
-    *       create_nonce()
-    *       ==============
-    *       A security feature that Sanity presumes you should use. Please
-    *       refer to: http://codex.wordpress.org/WordPress_Nonces
+    *   create_nonce()
+    *   ==============
+    *   A security feature that Sanity presumes you should use. Please
+    *   refer to: http://codex.wordpress.org/WordPress_Nonces
     */
     function create_nonce() {
         $this->nonce = wp_create_nonce('sanity-nonce');
     }
 
     /*
-    *       add_ajax_actions()
-    *       ==================
-    *       Loops through $this->ajax_actions['admin'] and $this->ajax_actions['plugin'] and
-    *       registers ajax actions. This makes the actions available in the client plugin.
+    *   add_ajax_actions()
+    *   ==================
+    *   Loops through $this->ajax_actions['admin'] and $this->ajax_actions['plugin'] and
+    *   registers ajax actions. This makes the actions available in the client plugin.
     */
     function add_ajax_actions() {
         if(!empty($this->ajax_actions['admin'])) {
@@ -101,18 +108,72 @@ class SanityPluginFramework {
         }               
     }
 
+
     /*
-    *       render($view)
-    *       =============
-    *       Loads a view from within the /plugin/views folder. Keep in mind
-    *       that any data you need should be passed through the $this->data array.
-    *       A few examples:
+    *   load_custom_fields()
+    *   ====================
+    *   Loops through any custom fields defined within $this->custom_fields and
+    *   prepopulatd $this->data with the associated data
+    */
+    function load_custom_fields() {
+        foreach($this->custom_fields as $custom_field) {
+            $this->data[$custom_field] = get_post_meta(get_the_ID(), $custom_field, true);
+        }
+    }
+
+    /*
+    *   save_custom_fields()
+    *   ====================
+    *   Automatically saves custom fields defined within the $this->custom_fields array.
+    */
+    function save_custom_fields($post_id) {
+        if($this->is_valid_save($post_id)) {
+            foreach($this->custom_fields as $custom_field) {
+                if(!empty($_POST[$custom_field])) {
+                    update_post_meta($post_id, $custom_field, $_POST[$custom_field]);
+                }
+            }
+        }
+    }
+
+    /*
+    *   is_valid_save($post_id)
+    *   =======================
+    *   Verifies that a valid user is doing a valid save. Returns true if valid, false otherwise.
+    */
+    function is_valid_save($post_id) {
+        // Ignore the field if it's an autosave
+        if(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return false;
+        }
+        // If we are missing the security nonce, return false
+        if(empty($_POST['sanity-nonce'])) {
+            return false;
+        }
+        // If the nonce does not verify, return false
+        if(!wp_verify_nonce($_POST['sanity-nonce'], 'sanity-nonce')) {
+            return false;
+        }
+        // If the current user does not have permission, return false
+        if(!current_user_can('edit_post', $post_id)) {
+            return false;
+        }
+        // If we get this far, return true
+        return true;
+    }
+
+    /*
+    *   render($view)
+    *   =============
+    *   Loads a view from within the /plugin/views folder. Keep in mind
+    *   that any data you need should be passed through the $this->data array.
+    *   A few examples:
     *
-    *           Load /Plugin/views/example.php
-    *           $this->render('example');
+    *       Load /Plugin/views/example.php
+    *       $this->render('example');
     *
-    *           Load /Plugin/views/subfolder/example.php
-    *           $this->render('subfolder/example);
+    *       Load /Plugin/views/subfolder/example.php
+    *       $this->render('subfolder/example);
     *
     */
     function render($view) {
@@ -122,6 +183,15 @@ class SanityPluginFramework {
         $output = ob_get_clean();
         return $output;
     }
-    
+
+    /*
+    *   sanity_nonce()
+    *   ==============
+    *   Used to render the hidden nonce field required by Sanity to save custom fields
+    */
+    function sanity_nonce() {
+        echo "<input type='hidden' name='sanity-nonce' value='".$this->nonce."' />";
+    }
+
 }
 ?>
