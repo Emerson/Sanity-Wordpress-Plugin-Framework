@@ -176,8 +176,19 @@ class SanityPluginFramework {
     *       $this->render('subfolder/example);
     *
     */
-    function render($view) {
-        $template_path = $this->plugin_dir.'/views/'.$view.'.php';
+    function render($view, $from_template = false) {
+		$template_path = $this->plugin_dir.'/views/'.$view.'.php';
+        
+        if($from_template) {
+            // Look for the view in the template/child-template directories.
+            $theme_template_path = locate_template($view.'.php');
+
+            // If not found, fall back to the plugin directory.
+            if(!empty($theme_template_path)) {
+                $template_path = $theme_template_path;
+            }
+        }
+
         ob_start();
         include($template_path);
         $output = ob_get_clean();
